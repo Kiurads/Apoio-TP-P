@@ -21,7 +21,7 @@ typedef struct{
 
 pPilotos getVetor(int *nPilotos);
 void printPiloto(pilotos p);
-void verificaPilotos(pPilotos v, int *nPilotos);
+pPilotos verificaPilotos(pPilotos v, int *nPilotos);
 int verificaData(int dia, int mes, int ano);
 
 int main() {
@@ -36,6 +36,13 @@ int main() {
         printf("Erro na criação do vetor\n");
         return 1;
     }
+
+    for(int i = 0; i < nPilotos; i++) {
+        printPiloto(vetorPilotos[i]);
+    }
+    
+
+    free(vetorPilotos);
     return 0;
 }
 
@@ -75,20 +82,20 @@ pPilotos getVetor(int *nPilotos) {
             &v[(*nPilotos) - 1].peso, 
             &v[(*nPilotos) - 1].experiencia, 
             &v[(*nPilotos) - 1].impedimento);
-
-        printPiloto(v[(*nPilotos) - 1]);
     }
 
     fclose(fPilotos);
 
-    verificaPilotos(v, nPilotos);
+    v = verificaPilotos(v, nPilotos);
 
     return v;
 }
 
-void verificaPilotos(pPilotos v, int *nPilotos) {
+pPilotos verificaPilotos(pPilotos v, int *nPilotos) {
     for(int i = 0; i < (*nPilotos); i++) {
-        if (!verificaData(v[i].dataNascimento.dia, v[i].dataNascimento.mes, v[i].dataNascimento.ano)) {
+        if (!verificaData(v[i].dataNascimento.dia, v[i].dataNascimento.mes, v[i].dataNascimento.ano) ||
+            v[i].impedimento < 0 || v[i].impedimento > 3 ||
+            v[i].peso <= 0) {
             for(int j = i; j < (*nPilotos) - 1; j++) {
                 v[j] = v[j + 1];
             }
@@ -98,6 +105,8 @@ void verificaPilotos(pPilotos v, int *nPilotos) {
             v = realloc(v, sizeof(pilotos) * (*nPilotos));
         }
     }
+
+    return v;
 }
 
 int verificaData(int dia, int mes, int ano) {

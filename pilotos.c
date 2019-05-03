@@ -4,26 +4,28 @@
 
 #define TAM 50
 
-struct pilotos* getVetor(int *nPilotos);
-void printPiloto(struct pilotos p);
-
-struct data {
+typedef struct {
     int dia;
     int mes;
     int ano;
-};
+} data;
 
-struct pilotos {
+typedef struct{
     int id;
     char nome[TAM];
-    struct data dataNascimento;
+    data dataNascimento;
     int peso;
     float experiencia;
     int impedimento;
-};
+}pilotos, *pPilotos;
+
+pPilotos getVetor(int *nPilotos);
+void printPiloto(pilotos p);
+void verificaPilotos(pPilotos v, int *nPilotos);
+int verificaData(int dia, int mes, int ano);
 
 int main() {
-    struct pilotos *vetorPilotos;
+    pPilotos vetorPilotos;
     int nPilotos;
 
     nPilotos = 0;
@@ -37,10 +39,10 @@ int main() {
     return 0;
 }
 
-struct pilotos* getVetor(int *nPilotos) {
+pPilotos getVetor(int *nPilotos) {
     char buffer[TAM];
     FILE *fPilotos;
-    struct pilotos *v;
+    pPilotos v;
 
     v = NULL;
 
@@ -57,7 +59,7 @@ struct pilotos* getVetor(int *nPilotos) {
     while(fscanf(fPilotos, "%[^\n]s", buffer) > 0) {
         (*nPilotos)++;
 
-        v = realloc(v, sizeof(struct pilotos) * (*nPilotos));
+        v = realloc(v, sizeof(pilotos) * (*nPilotos));
 
         if(v == NULL) {
             return v;
@@ -78,10 +80,42 @@ struct pilotos* getVetor(int *nPilotos) {
     }
 
     fclose(fPilotos);
+
+    verificaPilotos(v, nPilotos);
+
     return v;
 }
 
-void printPiloto(struct pilotos p) {
+void verificaPilotos(pPilotos v, int *nPilotos) {
+    for(int i = 0; i < (*nPilotos); i++) {
+        if (!verificaData(v[i].dataNascimento.dia, v[i].dataNascimento.mes, v[i].dataNascimento.ano)) {
+            for(int j = i; j < (*nPilotos) - 1; j++) {
+                v[j] = v[j + 1];
+            }
+
+            (*nPilotos)--;
+
+            v = realloc(v, sizeof(pilotos) * (*nPilotos));
+        }
+    }
+}
+
+int verificaData(int dia, int mes, int ano) {
+    int diasDoMes[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int valido = 0;
+
+    if(ano % 400 == 0 || (ano % 100 != 0 && ano % 4 == 0))
+        diasDoMes[1] = 29;
+
+    if (mes < 13) {
+        if(dia <= diasDoMes[mes - 1])
+        valido = 1;
+    }
+
+    return valido;
+}
+
+void printPiloto(pilotos p) {
     printf("Nome: %s\n", p.nome);
     printf("ID: %d\n", p.id);
     printf("Data de Nascimento: %d %d %d\n", p.dataNascimento.dia, p.dataNascimento.mes, p.dataNascimento.ano);

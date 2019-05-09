@@ -3,53 +3,49 @@
 #include "corridas.h"
 #include "utils.h"
 
-pCorridas novaCorrida(pCorridas vetorCorridas, int *nCorridas) {
+pCorridas novaCorrida() {
     pCorridas v;
 
-    v = vetorCorridas;
-
-    (*nCorridas)++;
-
-    v = realloc(v, sizeof(corridas) * (*nCorridas));
+    v = NULL;
+    v = malloc(sizeof(corridas));
 
     if(v == NULL) {
-        return vetorCorridas;
+        return NULL;
     }
 
     do {
         printf("Numero de voltas (entre 5 e 10): ");
-        scanf("%d", &v[(*nCorridas) - 1].voltas);
-    } while(v[(*nCorridas) - 1].voltas < 5 || v[(*nCorridas) - 1].voltas > 10);
-    
+        scanf("%d", &v[0].voltas);
+    } while(v[0].voltas < 5 || v[0].voltas > 10);
+
     do {
         printf("Comprimento (entre 500 e 1000): ");
-        scanf("%d", &v[(*nCorridas) - 1].comprimento);
-    } while(v[(*nCorridas) - 1].comprimento < 500 || v[(*nCorridas) - 1].comprimento > 1000);
-    
+        scanf("%d", &v[0].comprimento);
+    } while(v[0].comprimento < 500 || v[0].comprimento > 1000);
+
     do {
         printf("Maximo de participantes: ");
-        scanf("%d", &v[(*nCorridas) - 1].maxparticipantes);
-    } while(v[(*nCorridas) - 1].maxparticipantes <= 0);
+        scanf("%d", &v[0].maxparticipantes);
+    } while(v[0].maxparticipantes <= 0);
 
-    v[(*nCorridas) - 1].lista = NULL;
+    v[0].lista = NULL;
+    v[0].prox = NULL;
 
     return v;
 }
 
 pPar fazPares(pPilotos vetorPilotos, pCarros vetorCarros, pCorridas corrida, int nPilotos, int nCarros) {
-    pPilotos vPilotos;
-    pCarros vCarros;
-    pPar listaPares;
-    pPar atual;
+    pPilotos *vPilotos;
+    pCarros *vCarros;
+    pPar vetorPares;
     int pilotosValidos;
     int carrosValidos;
 
     initRandom();
 
+    vetorPares = NULL;
     pilotosValidos = 0;
     carrosValidos = 0;
-
-    corrida->maxparticipantes = getMinimo(corrida->maxparticipantes, nPilotos, nCarros);
 
     for (int i = 0; i < nPilotos; i++) {
         if(vetorPilotos[i].impedimento == 0) pilotosValidos++;
@@ -63,7 +59,7 @@ pPar fazPares(pPilotos vetorPilotos, pCarros vetorCarros, pCorridas corrida, int
         return NULL;
     }
 
-    printf("Teste");
+    corrida->maxparticipantes = getMinimo(corrida->maxparticipantes, pilotosValidos, carrosValidos);
 
     vPilotos = malloc(sizeof(pilotos) * pilotosValidos);
     vCarros = malloc(sizeof(carros) * carrosValidos);
@@ -72,7 +68,7 @@ pPar fazPares(pPilotos vetorPilotos, pCarros vetorCarros, pCorridas corrida, int
 
     for (int j = 0; j < nPilotos; j++) {
         if(vetorPilotos[j].impedimento == 0) {
-            vPilotos[i] = vetorPilotos[j];
+            vPilotos[i] = &vetorPilotos[j];
             i++;
         }
     }
@@ -81,33 +77,31 @@ pPar fazPares(pPilotos vetorPilotos, pCarros vetorCarros, pCorridas corrida, int
 
     for (int j = 0; j < nPilotos; j++) {
         if(vetorCarros[j].avaria == 0) {
-            vCarros[i] = vetorCarros[j];
+            vCarros[i] = &vetorCarros[j];
             i++;
         }
     }
 
-    atual = listaPares;
-
-    for (int j = 0; j < corrida->maxparticipantes; i++) {
+    for (int j = 0; j < corrida->maxparticipantes; j++) {
         int piloto;
         int carro;
+        int size;
 
-        atual = malloc(sizeof(par));
-        atual->prox = NULL;
+        size = j + 1;
 
         piloto = intUniformRnd(0, pilotosValidos - 1);
         carro = intUniformRnd(0, carrosValidos - 1);
 
-        atual->piloto = &vPilotos[piloto];
-        atual->carro = &vCarros[carro];
+        vetorPares = realloc(vetorPares, sizeof(par) * size);
 
-        atual = atual->prox;
+        vetorPares[j].carro = vCarros[carro];
+        vetorPares[j].piloto = vPilotos[piloto];
+
+        vPilotos[piloto] = vPilotos[pilotosValidos - 1];
+        vCarros[carro] = vCarros[carrosValidos - 1];
     }
 
-    free(vCarros);
-    free(vPilotos);
-
-    return listaPares;
+    return vetorPares;
 }
 
 int getMinimo(int max, int pilotos, int carros) {
@@ -121,20 +115,14 @@ int getMinimo(int max, int pilotos, int carros) {
     return temp;
 }
 
-void printCorrida(corridas c) {
-    pPar atual;
-
-    atual = c.lista;
-
-    printf("\nVoltas: %d\n", c.voltas);
-    printf("Comprimento: %d metros\n", c.comprimento);
-    printf("Maximo participantes: %d\n\n", c.maxparticipantes);
+void printCorrida(pCorridas c) {
+    printf("\nVoltas: %d\n", c->voltas);
+    printf("Comprimento: %d metros\n", c->comprimento);
+    printf("Maximo participantes: %d\n\n", c->maxparticipantes);
     printf("Participantes:\n");
 
-    while (atual != NULL) {
-        printf("\t%s - Carro %d", atual->piloto->nome, atual->carro->id);
-
-        atual = atual->prox;
+    for (int i = 0; i < c->maxparticipantes; i++) {
+        printf("\t%s - Carro %d\n", c->lista[i].piloto->nome, c->lista[i].carro->id);
     }
 }
 

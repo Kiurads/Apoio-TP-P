@@ -3,9 +3,9 @@
 
 #include "structs.h"
 
-pCorridas novaCorrida(pCorridas vetorCorridas, int *nCorridas);
+pCorridas novaCorrida();
 pPar fazPares(pPilotos vetorPilotos, pCarros vetorCarros, pCorridas corrida, int nPilotos, int nCarros);
 int getMinimo(int max, int pilotos, int carros);
-void printCorrida(corridas c);
+void printCorrida(pCorridas c);
 
 #endif

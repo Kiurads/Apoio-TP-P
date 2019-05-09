@@ -24,17 +24,17 @@ typedef struct{
     int impedimento;
 }pilotos, *pPilotos;
 
-typedef struct par{
+typedef struct{
     pPilotos piloto;
     pCarros carro;
-    struct par *prox;
 }par, *pPar;
 
-typedef struct{
+typedef struct corrida{
     int voltas;
     int comprimento;
     int maxparticipantes;
     pPar lista;
+    struct corrida* prox;
 }corridas, *pCorridas;
 
 #endif

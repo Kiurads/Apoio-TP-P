@@ -9,25 +9,26 @@ void mostraMenu();
 int main() {
     pCarros vetorCarros;
     pPilotos vetorPilotos;
-    pCorridas vetorCorridas;
+    pCorridas listaCorridas;
+    pCorridas atual;
     int nCarros;
     int nPilotos;
     int nCorridas;
     int op;
 
 
-    vetorCorridas = NULL;
+    listaCorridas = NULL;
     nCarros = 0;
     nPilotos = 0;
     nCorridas = 0;
-    
-    system("clear");
+
+    system("cls");
 
     vetorCarros = getVetorCarros(&nCarros);
-    system("clear");
+    system("cls");
 
     vetorPilotos = getVetorPilotos(&nPilotos);
-    system("clear");
+    system("cls");
 
     if (vetorCarros == NULL || vetorPilotos == NULL) {
         printf("Erro na criação do vetor\n");
@@ -41,7 +42,7 @@ int main() {
 
         scanf("%d", &op);
 
-        system("clear");
+        system("cls");
 
         switch (op) {
         case 1:
@@ -55,14 +56,29 @@ int main() {
             }
             break;
         case 3:
-            vetorCorridas = novaCorrida(vetorCorridas, &nCorridas);
-            vetorCorridas[nCorridas - 1].lista = fazPares(vetorPilotos, vetorCarros, &vetorCorridas[nCorridas - 1], nPilotos, nCarros);
+            atual = listaCorridas;
+
+            while(atual != NULL) {
+                atual = atual->prox;
+            }
+
+            atual = novaCorrida(listaCorridas, &nCorridas);
+
+            atual->lista = fazPares(vetorPilotos, vetorCarros, atual, nPilotos, nCarros);
+
+            atual->prox = listaCorridas;
+
+            listaCorridas = atual;
 
             break;
         case 4:
-            for (int i = 0; i < nCorridas; i++) {
-                printCorrida(vetorCorridas[i]);
+            atual = listaCorridas;
+
+            while (atual != NULL) {
+                printCorrida(atual);
+                atual = atual->prox;
             }
+
             break;
         case 5:
             break;
@@ -71,7 +87,7 @@ int main() {
             break;
         }
     }
-    
+
     return 0;
 }
 
@@ -79,7 +95,7 @@ void mostraMenu() {
     printf("1 - Mostra pilotos\n");
     printf("2 - Mostra carros\n");
     printf("3 - Nova corrida individual\n");
-    printf("4 - Monta corrida\n");
+    printf("4 - Mostra corridas\n");
     printf("5 - Sair\n");
     printf("\n");
     printf("Opcao: ");

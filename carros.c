@@ -1,44 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "carros.h"
 
-#define TAM 50
-
-struct carros* getVetor(int *nCarros);
-void printCarro(struct carros c);
-
-struct carros {
-    int id;
-    int potencia;
-    int avaria;
-};
-
-int main() {
-    struct carros *vetorCarros;
-    int nCarros;
-
-    nCarros = 0;
-
-    vetorCarros = getVetor(&nCarros);
-
-    if (vetorCarros == NULL) {
-        printf("Erro na criação do vetor\n");
-        return 1;
-    }
-    return 0;
-}
-
-struct carros* getVetor(int *nCarros) {
+pCarros getVetorCarros(int *nCarros) {
     char buffer[TAM];
     FILE *fCarros;
-    struct carros *v;
+    pCarros v;
     int id;
     int potencia;
     int avaria;
 
     v = NULL;
 
-    printf("Escreva o nome do ficheiro: ");
+    printf("Escreva o nome do ficheiro de carros: ");
     scanf("%s", buffer);
 
     fCarros = fopen(buffer, "r");
@@ -51,7 +26,7 @@ struct carros* getVetor(int *nCarros) {
     while(fscanf(fCarros, "%d  %d  %d\n\n", &id, &potencia, &avaria) > 0) {
         (*nCarros)++;
 
-        v = realloc(v, sizeof(struct carros) * (*nCarros));
+        v = realloc(v, sizeof(carros) * (*nCarros));
 
         if(v == NULL) {
             return v;
@@ -68,7 +43,7 @@ struct carros* getVetor(int *nCarros) {
     return v;
 }
 
-void printCarro(struct carros c) {
+void printCarro(carros c) {
     printf("ID: %d\n", c.id);
     printf("Potencia: %d\n", c.potencia);
     printf("Avaria: %d\n\n", c.avaria);

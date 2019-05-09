@@ -1,59 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "pilotos.h"
 
-#define TAM 50
-
-typedef struct {
-    int dia;
-    int mes;
-    int ano;
-} data;
-
-typedef struct{
-    int id;
-    char nome[TAM];
-    data dataNascimento;
-    int peso;
-    float experiencia;
-    int impedimento;
-}pilotos, *pPilotos;
-
-pPilotos getVetor(int *nPilotos);
-void printPiloto(pilotos p);
-pPilotos verificaPilotos(pPilotos v, int *nPilotos);
-int verificaData(int dia, int mes, int ano);
-
-int main() {
-    pPilotos vetorPilotos;
-    int nPilotos;
-
-    nPilotos = 0;
-
-    vetorPilotos = getVetor(&nPilotos);
-
-    if (vetorPilotos == NULL) {
-        printf("Erro na criação do vetor\n");
-        return 1;
-    }
-
-    for(int i = 0; i < nPilotos; i++) {
-        printPiloto(vetorPilotos[i]);
-    }
-    
-
-    free(vetorPilotos);
-    return 0;
-}
-
-pPilotos getVetor(int *nPilotos) {
+pPilotos getVetorPilotos(int *nPilotos) {
     char buffer[TAM];
     FILE *fPilotos;
     pPilotos v;
 
     v = NULL;
 
-    printf("Escreva o nome do ficheiro: ");
+    printf("Escreva o nome do ficheiro de pilotos: ");
     scanf("%s", buffer);
 
     fPilotos = fopen(buffer, "r");

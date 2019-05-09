@@ -2,3 +2,5 @@
 .vscode/ipch/7b8d00f2de9f5dbf/mmap_address.bin
 *.ipch
 *.exe
+*.bin
+*.stackdump

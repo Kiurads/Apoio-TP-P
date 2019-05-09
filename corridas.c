@@ -99,6 +99,9 @@ pPar fazPares(pPilotos vetorPilotos, pCarros vetorCarros, pCorridas corrida, int
 
         vPilotos[piloto] = vPilotos[pilotosValidos - 1];
         vCarros[carro] = vCarros[carrosValidos - 1];
+
+        pilotosValidos--;
+        carrosValidos--;
     }
 
     return vetorPares;

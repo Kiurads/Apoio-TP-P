@@ -35,11 +35,10 @@ pCarros getVetorCarros(int *nCarros) {
         v[(*nCarros) - 1].id = id;
         v[(*nCarros) - 1].potencia = potencia;
         v[(*nCarros) - 1].avaria = avaria;
-
-        printCarro(v[(*nCarros) - 1]);
     }
 
     fclose(fCarros);
+    
     return v;
 }
 

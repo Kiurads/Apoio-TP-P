@@ -33,7 +33,7 @@ typedef struct par{
 typedef struct{
     int voltas;
     int comprimento;
-    int maxcarros;
+    int maxparticipantes;
     pPar lista;
 }corridas, *pCorridas;
 

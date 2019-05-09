@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "structs.h"
 #include "pilotos.h"
 #include "carros.h"
+#include "corridas.h"
 
 void mostraMenu();
 
@@ -15,9 +15,13 @@ int main() {
     int nCorridas;
     int op;
 
+
+    vetorCorridas = NULL;
     nCarros = 0;
     nPilotos = 0;
     nCorridas = 0;
+    
+    system("clear");
 
     vetorCarros = getVetorCarros(&nCarros);
     system("clear");
@@ -30,7 +34,7 @@ int main() {
         return 1;
     }
 
-    while (op != 4) {
+    while (op != 5) {
         op = 0;
 
         mostraMenu();
@@ -51,9 +55,16 @@ int main() {
             }
             break;
         case 3:
-            printf("Under development\n");
+            vetorCorridas = novaCorrida(vetorCorridas, &nCorridas);
+            vetorCorridas[nCorridas - 1].lista = fazPares(vetorPilotos, vetorCarros, &vetorCorridas[nCorridas - 1], nPilotos, nCarros);
+
             break;
         case 4:
+            for (int i = 0; i < nCorridas; i++) {
+                printCorrida(vetorCorridas[i]);
+            }
+            break;
+        case 5:
             break;
         default:
             printf("Opcao invalida\n");
@@ -67,8 +78,9 @@ int main() {
 void mostraMenu() {
     printf("1 - Mostra pilotos\n");
     printf("2 - Mostra carros\n");
-    printf("3 - Monta corrida\n");
-    printf("4 - Sair\n");
+    printf("3 - Nova corrida individual\n");
+    printf("4 - Monta corrida\n");
+    printf("5 - Sair\n");
     printf("\n");
     printf("Opcao: ");
 }

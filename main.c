@@ -10,7 +10,9 @@ int main() {
     pCarros vetorCarros;
     pPilotos vetorPilotos;
     pCorridas listaCorridas;
+    pCorridas nova;
     pCorridas atual;
+    pCorridas ultima;
     int nCarros;
     int nPilotos;
     int nCorridas;
@@ -22,13 +24,13 @@ int main() {
     nPilotos = 0;
     nCorridas = 0;
 
-    system("cls");
+    system("clear");
 
     vetorCarros = getVetorCarros(&nCarros);
-    system("cls");
+    system("clear");
 
     vetorPilotos = getVetorPilotos(&nPilotos);
-    system("cls");
+    system("clear");
 
     if (vetorCarros == NULL || vetorPilotos == NULL) {
         printf("Erro na criação do vetor\n");
@@ -42,7 +44,7 @@ int main() {
 
         scanf("%d", &op);
 
-        system("cls");
+        system("clear");
 
         switch (op) {
         case 1:
@@ -56,22 +58,25 @@ int main() {
             }
             break;
         case 3:
-            atual = listaCorridas;
+            ultima = listaCorridas;
+            
+            nova = novaCorrida();
+            nova->lista = fazPares(vetorPilotos, vetorCarros, nova, nPilotos, nCarros);
 
-            while(atual != NULL) {
-                atual = atual->prox;
+            if (listaCorridas == NULL)
+                listaCorridas = nova;
+            else {
+                while(ultima->prox != NULL) 
+                    ultima = ultima->prox;
+
+                ultima->prox = nova;
             }
-
-            atual = novaCorrida(listaCorridas, &nCorridas);
-
-            atual->lista = fazPares(vetorPilotos, vetorCarros, atual, nPilotos, nCarros);
-
-            atual->prox = listaCorridas;
-
-            listaCorridas = atual;
-
+            
+            nCorridas++;
+            
             break;
         case 4:
+
             atual = listaCorridas;
 
             while (atual != NULL) {

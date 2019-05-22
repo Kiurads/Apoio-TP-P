@@ -125,7 +125,7 @@ void printCorrida(pCorridas c) {
     printf("Participantes:\n");
 
     for (int i = 0; i < c->maxparticipantes; i++) {
-        printf("\t%s - Carro %d\n", c->lista[i].piloto->nome, c->lista[i].carro->id);
+        printf("\tPiloto %s : Carro %d\n\n", c->lista[i].piloto->nome, c->lista[i].carro->id);
     }
 }
 
